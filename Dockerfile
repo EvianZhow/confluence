@@ -1,12 +1,14 @@
 FROM openjdk:8-stretch
 
-LABEL maintainer="haxqer <haxqer666@gmail.com>" version="6.15.7"
+LABEL maintainer="Evian Zhow <austinchou0126@gmail.com>" version="6.10.3"
 
 ARG ATLASSIAN_PRODUCTION=confluence
 ARG APP_NAME=confluence
-ARG APP_VERSION=6.15.7
-ARG AGENT_VERSION=1.2.2
+ARG APP_VERSION=6.10.3
+ARG AGENT_VERSION=1.2.3
 ARG MYSQL_DRIVER_VERSION=5.1.48
+
+COPY "atlassian-agent-v1.2.3/atlassian-agent.jar" /var/agent/
 
 ENV CONFLUENCE_HOME=/var/confluence \
     CONFLUENCE_INSTALL=/opt/confluence \
@@ -19,7 +21,6 @@ ENV CONFLUENCE_HOME=/var/confluence \
 ENV JAVA_OPTS="-javaagent:${AGENT_PATH}/${AGENT_FILENAME} ${JAVA_OPTS}"
 
 RUN mkdir -p ${CONFLUENCE_INSTALL} ${CONFLUENCE_HOME} ${AGENT_PATH} \
-&& curl -o ${AGENT_PATH}/${AGENT_FILENAME}  https://github.com/haxqer/confluence/releases/download/v${AGENT_VERSION}/atlassian-agent.jar -L \
 && curl -o /tmp/atlassian.tar.gz https://product-downloads.atlassian.com/software/confluence/downloads/atlassian-${APP_NAME}-${APP_VERSION}.tar.gz -L \
 && tar xzf /tmp/atlassian.tar.gz -C /opt/confluence/ --strip-components 1 \
 && rm -f /tmp/atlassian.tar.gz \
